@@ -1,6 +1,6 @@
 ﻿namespace AnotherPacman
 {
-    partial class Form1
+    partial class Game
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -34,7 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(685, 450);
+            this.ClientSize = new System.Drawing.Size(581, 450);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
