@@ -28,20 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.labelGameOver = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // Form1
+            // labelGameOver
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.labelGameOver.AutoSize = true;
+            this.labelGameOver.Font = new System.Drawing.Font("MS Gothic", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelGameOver.Location = new System.Drawing.Point(129, 121);
+            this.labelGameOver.Name = "labelGameOver";
+            this.labelGameOver.Size = new System.Drawing.Size(177, 37);
+            this.labelGameOver.TabIndex = 0;
+            this.labelGameOver.Text = "GameOver";
+            this.labelGameOver.Visible = false;
+            // 
+            // Game
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(581, 450);
-            this.Name = "Form1";
+            this.ClientSize = new System.Drawing.Size(436, 366);
+            this.Controls.Add(this.labelGameOver);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Name = "Game";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Label labelGameOver;
     }
 }
 

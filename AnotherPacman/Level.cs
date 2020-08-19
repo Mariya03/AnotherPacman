@@ -19,7 +19,7 @@ namespace AnotherPacman
         private void InitializeLevel()
         {
             this.BackColor = Color.SteelBlue;
-            this.Size = new System.Drawing.Size(300, 300);
+            this.Size = new Size(400, 400);
             this.Location = new Point(20, 20);
             this.Name = "Level";
         }

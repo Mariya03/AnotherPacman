@@ -22,8 +22,34 @@ namespace AnotherPacman
         private void InitializeEnemy()
         {
             this.BackColor = Color.Red;
-            this.Size = new Size(40, 40);
+            this.Size = new Size(20, 20);
             this.Tag = "ghost";
+        }
+        /// <summary>
+        /// Sets movement direction of the enemy
+        /// </summary>
+        /// <param name="directionCode">1-East, 2-South, 3-West, 4-North</param>
+        public void SetDirection(int directionCode)
+        {
+            switch (directionCode)
+            {
+                case 1:
+                    HorizontalVelocity = Step;
+                    VerticalVelocity = 0;
+                    break;
+                case 2:
+                    HorizontalVelocity = 0;
+                    VerticalVelocity = Step;
+                    break;
+                case 3:
+                    HorizontalVelocity = -Step;
+                    VerticalVelocity = 0;
+                    break;
+                case 4:
+                    HorizontalVelocity = 0;
+                    VerticalVelocity = -Step;
+                    break;
+            }
         }
     }
 

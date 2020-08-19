@@ -41,10 +41,6 @@ namespace AnotherPacman
             AddEnemies();
         }
 
-        private void AddEnemies()
-        {
-
-        }
         private void AddLevel()
         {
             //adding level to the game
@@ -55,6 +51,7 @@ namespace AnotherPacman
         {
             //adding hero to the game
             this.Controls.Add(hero);
+            hero.Parent = level;
             hero.BringToFront();
         }
         private void InitializeMainTimer()
@@ -68,6 +65,9 @@ namespace AnotherPacman
         {
             MoveHero();
             HeroBorderCollision();
+            MoveEnemies();
+            EnemyBorderCollision();
+            HeroEnemyCollision();
         }
 
         private void MoveHero()
@@ -75,27 +75,41 @@ namespace AnotherPacman
             hero.Left += hero.HorizontalVelocity;
             hero.Top += hero.VerticalVelocity;
         }
+
+        private void MoveEnemies()
+        {
+            foreach(var enemy in enemies)
+            {
+                enemy.Left += enemy.HorizontalVelocity;
+                enemy.Top += enemy.VerticalVelocity;
+            }
+        }
         private void Game_KeyDown(object sender, KeyEventArgs e)
         {
             switch(e.KeyCode)
             {
                 case Keys.Right:
+                    hero.Direction = "right";
                     hero.HorizontalVelocity = hero.Step;
                     hero.VerticalVelocity = 0;
                     break;
                 case Keys.Down:
+                    hero.Direction = "down";
                     hero.HorizontalVelocity = 0;
                     hero.VerticalVelocity = hero.Step;
                     break;
                 case Keys.Left:
+                    hero.Direction = "left";
                     hero.HorizontalVelocity = -hero.Step;
                     hero.VerticalVelocity = 0;
                     break;
                 case Keys.Up:
+                    hero.Direction = "up";
                     hero.HorizontalVelocity = 0;
                     hero.VerticalVelocity = -hero.Step;
                     break;
             }
+            SetRandomEnemyDirection();
         }
 
         private void HeroBorderCollision()
@@ -118,17 +132,77 @@ namespace AnotherPacman
             }
         }
 
+        private void EnemyBorderCollision()
+        {
+            foreach(var enemy in enemies)
+            {
+                if(enemy.Left + enemy.Width> level.Left + level.Width)
+                {
+                    if (enemy.Top < level.Top) //From "up" to "down"
+                    {
+                        enemy.HorizontalVelocity = 0;
+                        enemy.VerticalVelocity = +enemy.Step;
+                    }
+                    if (enemy.Top > level.Height - enemy.Width) //From "down" to "up"
+                    {
+                        enemy.HorizontalVelocity = 0;
+                        enemy.VerticalVelocity = -enemy.Step;
+                    }
+                    if (enemy.Left < level.Left) //From "left" to "right"
+                    {
+                        enemy.HorizontalVelocity = +enemy.Step;
+                        enemy.VerticalVelocity = 0;
+                    }
+                    if (enemy.Left > level.Width - enemy.Width) //From "right" to "left"
+                    {
+                        enemy.HorizontalVelocity = -enemy.Step;
+                        enemy.VerticalVelocity = 0;
+                    }
+                }
+            }
+        }
+
         private void AddEnemies()
         {
             Enemy enemy;
-            for(int i = 0; i < initialEnemyCount;i++)
+            for(int i = 0; i < initialEnemyCount; i++)
             {
                 enemy = new Enemy();
-                enemy.Location = new Point(rand.Next(100, 500), rand.Next(100,100));
-                enemies.Add(new Enemy());
+                enemy.Location = new Point(rand.Next(100, 500), rand.Next(100,500));
+                enemy.SetDirection(rand.Next(1, 5));
+                enemies.Add(enemy);
                 this.Controls.Add(enemy);
+                enemy.Parent = level;
                 enemy.BringToFront();
                 
+            }
+        }
+
+        private void SetRandomEnemyDirection()
+        {
+            foreach(var enemy in enemies)
+            {
+                enemy.SetDirection(rand.Next(1, 5));
+            }
+        }
+
+        private void GameOver()
+        {
+            mainTimer.Stop();
+            labelGameOver.BackColor = Color.Transparent;
+            labelGameOver.Parent = level;
+            labelGameOver.Visible = true;
+            labelGameOver.BringToFront();
+        }
+
+        private void HeroEnemyCollision()
+        {
+            foreach (var enemy in enemies)
+            {
+                if (enemy.Bounds.IntersectsWith(hero.Bounds))
+                {
+                    GameOver();
+                }
             }
         }
     }
