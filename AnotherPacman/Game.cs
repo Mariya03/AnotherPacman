@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,7 +18,9 @@ namespace AnotherPacman
         private Random rand = new Random();
         private Level level = new Level();
         private Hero hero = new Hero();
+        private Food food = new Food();
         private Timer mainTimer = null;
+        private Timer enemySpawningTimer = null;
         private List<Enemy> enemies = new List<Enemy>();
 
 
@@ -26,6 +29,7 @@ namespace AnotherPacman
             InitializeComponent();
             InitializeGame();
             InitializeMainTimer();
+            InitializeEnemySpawningTimer();
         }
 
         private void InitializeGame()
@@ -38,9 +42,19 @@ namespace AnotherPacman
 
             AddLevel();
             AddHero();
-            AddEnemies();
+            AddEnemies(initialEnemyCount);
+            AddFood();
         }
 
+        private void AddFood()
+        {
+            this.Controls.Add(food);
+            food.Parent = level;
+            food.BringToFront();
+            food.Location = new Point(rand.Next(100, 400), rand.Next(100, 400));
+        }
+
+        
         private void AddLevel()
         {
             //adding level to the game
@@ -61,6 +75,17 @@ namespace AnotherPacman
             mainTimer.Interval = 20;
             mainTimer.Start();
         }
+        private void InitializeEnemySpawningTimer()
+        {
+            enemySpawningTimer = new Timer();
+            enemySpawningTimer.Tick += EnemySpawningTimer_Tick;
+            enemySpawningTimer.Interval = 3000;
+            enemySpawningTimer.Start();
+        }
+        private void EnemySpawningTimer_Tick(object sender, EventArgs e)
+        {
+            AddEnemies(1);
+        }
         private void MainTimer_Tick(object sender, EventArgs e)
         {
             MoveHero();
@@ -68,6 +93,7 @@ namespace AnotherPacman
             MoveEnemies();
             EnemyBorderCollision();
             HeroEnemyCollision();
+            HeroFoodCollision();
         }
 
         private void MoveHero()
@@ -134,38 +160,46 @@ namespace AnotherPacman
 
         private void EnemyBorderCollision()
         {
-            foreach(var enemy in enemies)
+            foreach (var enemy in enemies)
             {
-                if(enemy.Left + enemy.Width> level.Left + level.Width)
+                if (enemy.Top < level.Top) //From "up" to "down"
                 {
-                    if (enemy.Top < level.Top) //From "up" to "down"
-                    {
-                        enemy.HorizontalVelocity = 0;
-                        enemy.VerticalVelocity = +enemy.Step;
-                    }
-                    if (enemy.Top > level.Height - enemy.Width) //From "down" to "up"
-                    {
-                        enemy.HorizontalVelocity = 0;
-                        enemy.VerticalVelocity = -enemy.Step;
-                    }
-                    if (enemy.Left < level.Left) //From "left" to "right"
-                    {
-                        enemy.HorizontalVelocity = +enemy.Step;
-                        enemy.VerticalVelocity = 0;
-                    }
-                    if (enemy.Left > level.Width - enemy.Width) //From "right" to "left"
-                    {
-                        enemy.HorizontalVelocity = -enemy.Step;
-                        enemy.VerticalVelocity = 0;
-                    }
+                    enemy.SetDirection(2);
+                }
+                if (enemy.Top > level.Height - enemy.Height) //From "down" to "up"
+                {
+                    enemy.SetDirection(4);
+                }
+                if (enemy.Left < level.Left) //From "left" to "right"
+                {
+                    enemy.SetDirection(1);
+                }
+                if (enemy.Left > level.Width - enemy.Width) //From "right" to "left"
+                {
+                    enemy.SetDirection(3);
                 }
             }
         }
 
-        private void AddEnemies()
+
+        private void HeroFoodCollision()
+        {
+            if(hero.Bounds.IntersectsWith(food.Bounds))
+            {
+                RespawnFood();
+            }
+        }
+
+        private void RespawnFood()
+        {
+
+            food.Location = new Point(rand.Next(100, 400), rand.Next(100, 400));
+        }
+
+        private void AddEnemies(int enemyCount)
         {
             Enemy enemy;
-            for(int i = 0; i < initialEnemyCount; i++)
+            for(int i = 0; i < enemyCount; i++)
             {
                 enemy = new Enemy();
                 enemy.Location = new Point(rand.Next(100, 500), rand.Next(100,500));
@@ -183,6 +217,7 @@ namespace AnotherPacman
             foreach(var enemy in enemies)
             {
                 enemy.SetDirection(rand.Next(1, 5));
+
             }
         }
 
