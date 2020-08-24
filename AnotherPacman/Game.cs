@@ -13,7 +13,7 @@ namespace AnotherPacman
 {
     public partial class Game : Form
     {
-        private int initialEnemyCount = 4;
+        private int initialEnemyCount = 3;
 
         private Random rand = new Random();
         private Level level = new Level();
