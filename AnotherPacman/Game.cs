@@ -192,7 +192,7 @@ namespace AnotherPacman
 
         private void RespawnFood()
         {
-
+            food.SetType(rand.Next(1, 5));
             food.Location = new Point(rand.Next(100, 400), rand.Next(100, 400));
         }
 
