@@ -186,6 +186,7 @@ namespace AnotherPacman
         {
             if(hero.Bounds.IntersectsWith(food.Bounds))
             {
+                hero.Step += 1;
                 RespawnFood();
             }
         }
