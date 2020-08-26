@@ -20,6 +20,9 @@ namespace AnotherPacman
         private Timer animationTimer = null;
         private int frameCounter = 1;
 
+
+        private Timer pacmanMeltTimer = null;
+
         public Hero()
         {
             InitializeHero();
@@ -36,7 +39,48 @@ namespace AnotherPacman
 
         private void AnimationTimer_Tick(object sender, EventArgs e)
         {
-            Animate();
+            if (this.Top == -10)
+            {
+                this.Dispose();
+            }
+            else
+            {
+                Animate();
+            }
+
+        }
+        public void Melt()
+        {
+            animationTimer.Stop();
+            frameCounter = 1;
+            InitializePacmanMeltTimer();
+        }
+        public void InitializePacmanMeltTimer()
+        {
+            pacmanMeltTimer = new Timer();
+            pacmanMeltTimer.Tick += PacmanMeltTimer_Tick;
+            pacmanMeltTimer.Interval = 100;
+            pacmanMeltTimer.Start();
+        }
+        public void PacmanMeltTimer_Tick(object sender, EventArgs e)
+        {
+            MeltAnimate();
+        }
+
+        public void MeltAnimate()
+        {
+            string imageName = "pacman_melt" + "_" + frameCounter.ToString();
+            this.Image = (Image)Properties.Resources.ResourceManager.GetObject(imageName);
+            this.SizeMode = PictureBoxSizeMode.StretchImage;
+            frameCounter++;
+            if (frameCounter > 14)
+            {
+                pacmanMeltTimer.Stop();
+            }
+        }
+        private void PacmanTimer_Tick(object sender, EventArgs e)
+        {
+            MeltAnimate();
         }
 
         private void Animate()
